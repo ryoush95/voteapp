@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "671654608209",
+    "project_id": "voteapp-52006",
+    "storage_bucket": "voteapp-52006.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:671654608209:android:15c1402d64ea010552e770",
+        "android_client_info": {
+          "package_name": "com.sogeum.voteapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "671654608209-oeijin0nm6fkvuuhcvbnnpdnijmar785.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sogeum.voteapp",
+            "certificate_hash": "24eca107fee46f35e07259c0505fc82c673b1b3a"
+          }
+        },
+        {
+          "client_id": "671654608209-qr1cn5qv0h6feomicqorijmk7mpdu532.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuwzWATyAtt2WDbTTDamOgDjO_-L7f1y0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "671654608209-qr1cn5qv0h6feomicqorijmk7mpdu532.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
