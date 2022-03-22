@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 class VoteAddController extends GetxController {
   FirebaseFirestore db = FirebaseFirestore.instance;
   RxString category = ''.obs;
-  RxList<String> catelist = ['a', 'b', 'c'].obs;
+  List<String> catelist = ['a', 'b', 'c'];
   TextEditingController titletxc = TextEditingController();
   TextEditingController memotxc = TextEditingController();
 
@@ -22,10 +22,11 @@ class VoteAddController extends GetxController {
 
   void add(String title, String memo) {
     db.collection('vote').add({
-      'allcount' : 0,
-      'timestamp' : Timestamp.now(),
-      'title' : title,
-      'memo' : memo,
+      'allcount': 0,
+      'timestamp': Timestamp.now(),
+      'title': title,
+      'memo': memo,
+      'category': category.value,
     });
   }
 
