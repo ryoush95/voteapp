@@ -74,7 +74,10 @@ class Vote extends StatelessWidget {
                           SizedBox(
                             height: 50,
                             width: 50,
-                            child: Image.asset('images/appicon.png'),
+                            child: CircleAvatar(
+                              backgroundImage: c.circle(index),
+                              radius: 30,
+                            ),
                           ),
                           const SizedBox(
                             width: 10,

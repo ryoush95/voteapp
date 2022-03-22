@@ -41,7 +41,10 @@ class Home extends StatelessWidget {
                             SizedBox(
                               height: 50,
                               width: 50,
-                              child: Image.asset('images/appicon.png'),
+                              child: CircleAvatar(
+                                backgroundImage: c.circle(c.hotlist, index),
+                                radius: 30,
+                              ),
                             ),
                             const SizedBox(
                               width: 10,
@@ -95,7 +98,10 @@ class Home extends StatelessWidget {
                             SizedBox(
                               height: 50,
                               width: 50,
-                              child: Image.asset('images/appicon.png'),
+                              child: CircleAvatar(
+                                backgroundImage: c.circle(c.newlist, index),
+                                radius: 30,
+                              ),
                             ),
                             const SizedBox(
                               width: 10,

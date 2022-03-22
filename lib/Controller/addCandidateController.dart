@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -16,6 +15,7 @@ class AddCandidateController extends GetxController {
   String? email = FirebaseAuth.instance.currentUser?.email;
   XFile? pickImage;
   String? fileName;
+  String? url;
 
   FirebaseStorage fs = FirebaseStorage.instance;
 
@@ -33,18 +33,9 @@ class AddCandidateController extends GetxController {
     update();
   }
 
-  Future<void> upload() async {
-    try {
-      await fs.ref(fileName).putFile(File(pickImage!.path));
-      // print(fileName);
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  void submit(String name, String memo) {
+  void submit(String name, String memo) async {
     if (pickImage == null) {
-      fileName = '';
+      url = '';
     }
     if (name == '' || memo == '') {
       Fluttertoast.showToast(
@@ -53,7 +44,9 @@ class AddCandidateController extends GetxController {
         backgroundColor: Colors.black45,
       );
     } else {
-      upload();
+      UploadTask ut =
+          fs.ref('profile').child(fileName!).putFile(File(pickImage!.path));
+      url = await (await ut).ref.getDownloadURL();
       FirebaseFirestore.instance
           .collection('vote')
           .doc(uid.value)
@@ -64,7 +57,7 @@ class AddCandidateController extends GetxController {
         'votecount': 0,
         'timestamp': Timestamp.now(),
         'auth': FirebaseAuth.instance.currentUser?.email,
-        'image': fileName
+        'image': url
       });
       Get.back();
     }

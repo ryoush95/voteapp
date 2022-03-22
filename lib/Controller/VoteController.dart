@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,6 +12,8 @@ class VoteController extends GetxController {
   RxList<dynamic> votelist = <dynamic>[].obs;
   RxInt num = 0.obs;
   RxString uid = ''.obs;
+  var fs = FirebaseStorage.instance.ref('profile');
+  String? imageUrl;
 
   @override
   void onReady() {
@@ -27,6 +30,7 @@ class VoteController extends GetxController {
   // }
 
   Future voterank() async {
+    String img;
     await db
         .collection('vote')
         .doc(uid.value)
@@ -36,13 +40,24 @@ class VoteController extends GetxController {
         .then(
       (value) {
         value.docs.forEach((element) {
+          img = element.data()['image'] ?? '';
           votelist.add(Rank(
-              title: element.data()['name'],
-              votecount: element.data()['votecount'],
-              id: element.id));
+            title: element.data()['name'],
+            votecount: element.data()['votecount'],
+            id: element.id,
+            img: img,
+          ));
         });
       },
     );
+  }
+
+  ImageProvider? circle(int index) {
+    if (votelist[index].img == '') {
+      return const AssetImage('images/appicon.png');
+    } else {
+      return NetworkImage(votelist[index].img);
+    }
   }
 
   void voting(int index) {

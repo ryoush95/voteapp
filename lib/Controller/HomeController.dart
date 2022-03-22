@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:voteapp/screen/vote.dart';
 
@@ -32,6 +33,7 @@ class HomeController extends GetxController {
   }
 
   Future hotinit() async {
+    String img;
     await db.orderBy('allcount', descending: true).limit(1).get().then((value) {
       hotuid = value.docs[0].id;
       hotname = value.docs[0]['title'];
@@ -44,10 +46,12 @@ class HomeController extends GetxController {
           .then(
         (value) {
           value.docs.forEach((element) {
+            img = element.data()['image'] ?? '';
             hotlist.add(Rank(
                 title: element.data()['name'],
                 votecount: element.data()['votecount'],
-                id: element.id));
+                id: element.id,
+                img: img));
           });
         },
       );
@@ -56,6 +60,7 @@ class HomeController extends GetxController {
 
   Future newinit() async {
     var random = Random().nextInt(3);
+    String img;
 
     db.orderBy('timestamp').limit(3).get().then((value) {
       newuid = value.docs[random].id;
@@ -69,14 +74,24 @@ class HomeController extends GetxController {
           .then(
         (value) {
           value.docs.forEach((element) {
+            img = element.data()['image'] ?? '';
             newlist.add(Rank(
                 title: element.data()['name'],
                 votecount: element.data()['votecount'],
-                id: element.id));
+                id: element.id,
+                img: img));
           });
         },
       );
     });
+  }
+
+  ImageProvider? circle(List list, int index) {
+    if (list[index].img == '') {
+      return const AssetImage('images/appicon.png');
+    } else {
+      return NetworkImage(list[index].img);
+    }
   }
 
   void toVote(int v) {
