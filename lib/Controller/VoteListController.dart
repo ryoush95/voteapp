@@ -6,17 +6,11 @@ import '../model.dart';
 class VoteListController extends GetxController {
   FirebaseFirestore db = FirebaseFirestore.instance;
   RxList<dynamic> list = <dynamic>[].obs;
+  RxString cate = ''.obs;
 
-
-  @override
-  void onInit() {
-    // TODO: implement onInit
-    super.onInit();
-    init();
-  }
 
   Future init() async {
-    await db.collection('vote').orderBy('allcount', descending: true).get().then(
+    await db.collection('vote').where('category', isEqualTo: cate.value).orderBy('allcount', descending: true).get().then(
           (value) => value.docs.forEach((e) {
         list.add(VoteListModel(
             title: e.data()['title'],

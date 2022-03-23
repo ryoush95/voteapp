@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 import 'screen/bottomNavigation.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());

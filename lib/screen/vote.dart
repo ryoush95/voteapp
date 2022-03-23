@@ -10,8 +10,7 @@ class Vote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(VoteController());
-    final VoteController c = Get.find();
+    final VoteController c = Get.put(VoteController());
     c.uid.value = Get.arguments['uid'];
     RefreshController refreshController =
         RefreshController(initialRefresh: false);

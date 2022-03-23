@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:voteapp/Controller/bottomController.dart';
+import 'package:voteapp/screen/setting.dart';
 import 'package:voteapp/screen/voteAdd.dart';
 
+import 'board.dart';
+import 'category.dart';
+import 'home.dart';
 import 'login.dart';
 
 class BottomNavigation extends StatelessWidget {
@@ -10,12 +14,9 @@ class BottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(BottomNaviController());
-    BottomNaviController c = Get.find();
+    BottomNaviController c = Get.put(BottomNaviController());
     return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
+      onWillPop: c.onWillPop,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('app title'),
@@ -39,9 +40,22 @@ class BottomNavigation extends StatelessWidget {
           ],
         ),
         body: Obx(
-          () => Container(
-            child: c.widgetoption.elementAt(c.selectIndex.value),
-          ),
+          () => IndexedStack(
+            index: c.selectIndex.value,
+            children: [
+              const Home(),
+              Navigator(
+                key: c.navigatorKey,
+                onGenerateRoute: (rs){
+                  return MaterialPageRoute(builder: (context) {
+                    return const Category();
+                  },);
+                },
+              ),
+              const Board(),
+              const Setting(),
+            ],
+          )
         ),
         bottomNavigationBar: Obx(
           () => BottomNavigationBar(

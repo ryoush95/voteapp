@@ -2,17 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:voteapp/screen/vote.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:voteapp/screen/voteAdd.dart';
 
 import '../Controller/VoteListController.dart';
 
-class VoteList extends StatelessWidget {
-  const VoteList({Key? key}) : super(key: key);
+class VoteList extends StatefulWidget {
+  const VoteList({Key? key, this.arguments}) : super(key: key);
+  final arguments;
+
+  @override
+  State<VoteList> createState() => _VoteListState();
+}
+
+class _VoteListState extends State<VoteList> {
+  final VoteListController c = Get.put(VoteListController());
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    c.cate.value = widget.arguments;
+    c.init();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    Get.delete<VoteListController>();
+  }
 
   @override
   Widget build(BuildContext context) {
-    Get.put(VoteListController());
-    final VoteListController c = Get.find();
     RefreshController refreshController =
         RefreshController(initialRefresh: false);
 

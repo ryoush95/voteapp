@@ -7,8 +7,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(HomeController());
-    final HomeController c = Get.find();
+    final HomeController c = Get.put(HomeController());
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -16,7 +15,15 @@ class Home extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('지금 핫한 투표함'),
+            Row(children: [
+              const Text('지금 핫한 투표함'),
+              IconButton(onPressed: (){
+                c.hotlist.clear();
+                c.newlist.clear();
+                c.hotinit();
+                c.newinit();
+              }, icon: const Icon(Icons.refresh))
+            ]),
             const Text(''),
             SizedBox(
               height: 350,

@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../Controller/gSigninController.dart';
 
 class Login extends StatelessWidget {
+  Login({Key? key}) : super(key: key);
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final gSigninController c = Get.put(gSigninController());
 
@@ -37,7 +38,6 @@ class Login extends StatelessWidget {
     await GoogleSignIn().signOut();
     c.bt.value = '구글 로그인';
 
-    print("User Sign Out");
   }
 
   @override
