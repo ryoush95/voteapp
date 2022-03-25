@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:voteapp/Controller/CategoryController.dart';
 import 'package:voteapp/Controller/bottomController.dart';
+import 'package:voteapp/screen/board.dart';
 import 'package:voteapp/screen/votelist.dart';
 
 class Category extends StatelessWidget {
-  const Category({Key? key}) : super(key: key);
+  const Category({Key? key,this.argument}) : super(key: key);
+  final argument;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,9 @@ class Category extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return VoteList(arguments: list[index]);
+                  return argument == 'vote'?
+                  VoteList(arguments: list[index])
+                  : Board(arguments: list[index]);
                 },
               ),
             );

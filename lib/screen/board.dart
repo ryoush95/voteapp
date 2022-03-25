@@ -9,7 +9,8 @@ import 'package:voteapp/Controller/BoardController.dart';
 import 'boardView.dart';
 
 class Board extends StatefulWidget {
-  const Board({Key? key}) : super(key: key);
+  const Board({Key? key, this.arguments}) : super(key: key);
+  final arguments;
 
   @override
   State<Board> createState() => _BoardState();
@@ -23,7 +24,8 @@ class _BoardState extends State<Board> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    c.init();
+    String arg = widget.arguments;
+    c.init(arg);
     c.txc.addListener(() {});
   }
 
@@ -77,7 +79,7 @@ class _BoardState extends State<Board> {
                     physics: const BouncingScrollPhysics(),
                     itemCount: c.list.length,
                     itemBuilder: (context, index) {
-                      return GestureDetector(
+                      return InkWell(
                         onTap: () {
                           Get.to(const Boardview(), arguments: c.list[index].id);
                         },
@@ -93,7 +95,7 @@ class _BoardState extends State<Board> {
                                 Text(c.list[index].title),
                                 Text(c.list[index].writer),
                                 Text(c.list[index].replycount.toString()),
-                                Text(datetime(c.list[index].ts)),
+                                Text(c.list[index].ts),
                                 Text(c.list[index].name),
                               ],
                             ),
@@ -109,11 +111,5 @@ class _BoardState extends State<Board> {
         ),
       ),
     );
-  }
-
-  String datetime(Timestamp date) {
-    DateTime da = date.toDate();
-    String ts = DateFormat('yyyy-MM-dd HH:mm').format(da);
-    return ts;
   }
 }

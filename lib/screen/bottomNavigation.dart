@@ -19,7 +19,7 @@ class BottomNavigation extends StatelessWidget {
       onWillPop: c.onWillPop,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('app title'),
+          title: Obx(()=> Text(c.titletext.value)),
           actions: [
             IconButton(onPressed: (){
               Get.to(const voteAdd());
@@ -48,11 +48,18 @@ class BottomNavigation extends StatelessWidget {
                 key: c.navigatorKey,
                 onGenerateRoute: (rs){
                   return MaterialPageRoute(builder: (context) {
-                    return const Category();
+                    return const Category(argument: 'vote',);
                   },);
                 },
               ),
-              const Board(),
+              Navigator(
+                key: c.navigatorKey2,
+                onGenerateRoute: (rs){
+                  return MaterialPageRoute(builder: (context) {
+                    return const Category(argument: 'board',);
+                  },);
+                },
+              ),
               const Setting(),
             ],
           )

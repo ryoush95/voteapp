@@ -32,7 +32,7 @@ class BoardModel {
   String? title;
   String? writer;
   int? replycount;
-  Timestamp? ts;
+  String? ts;
   String? name;
 
   BoardModel({
@@ -40,7 +40,7 @@ class BoardModel {
     required String this.title,
     required String this.writer,
     required int this.replycount,
-    required Timestamp this.ts,
+    required String this.ts,
     required String this.name,
   });
 }

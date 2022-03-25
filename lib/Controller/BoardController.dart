@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:voteapp/model.dart';
 
 class BoardController extends GetxController {
@@ -11,9 +12,10 @@ class BoardController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   List list = [];
 
-  void init() async {
+  void init(String cate) async {
     await db
         .collection('board')
+        .where('category', isEqualTo: cate)
         .orderBy('timestamp', descending: true)
         .get()
         .then((value) => value.docs.forEach((element) {
@@ -22,12 +24,12 @@ class BoardController extends GetxController {
                   title: element.data()['title'],
                   writer: element.data()['writer'],
                   replycount: element.data()['replycount'],
-                  ts: element.data()['timestamp'],
+                  ts: datetime(element.data()['timestamp']),
                   name: element.data()['name']),
               );
             }),
     );
-    print(list);
+    update();
   }
 
   void boardadd() {
@@ -40,6 +42,7 @@ class BoardController extends GetxController {
           'title': txc.text,
           'content': txc.text,
           'replycount': 0,
+          'category' : 'a',
         });
       } else {
         Fluttertoast.showToast(msg: '빈칸 확인');
@@ -47,5 +50,11 @@ class BoardController extends GetxController {
     } else {
       print('login');
     }
+  }
+
+  String datetime(Timestamp date) {
+    DateTime da = date.toDate();
+    String ts = DateFormat('yyyy-MM-dd HH:mm').format(da);
+    return ts;
   }
 }
