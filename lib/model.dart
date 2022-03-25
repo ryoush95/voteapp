@@ -26,3 +26,21 @@ class VoteListModel {
       required Timestamp this.timestamp,
       required String this.id});
 }
+
+class BoardModel {
+  String? id;
+  String? title;
+  String? writer;
+  int? replycount;
+  Timestamp? ts;
+  String? name;
+
+  BoardModel({
+    required String this.id,
+    required String this.title,
+    required String this.writer,
+    required int this.replycount,
+    required Timestamp this.ts,
+    required String this.name,
+  });
+}

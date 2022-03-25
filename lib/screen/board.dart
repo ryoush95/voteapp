@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:voteapp/Controller/BoardController.dart';
 
 import 'boardView.dart';
 
@@ -14,33 +16,44 @@ class Board extends StatefulWidget {
 }
 
 class _BoardState extends State<Board> {
-  // BoardController c = Get.put(BoardController());
+  BoardController c = Get.put(BoardController());
   FirebaseFirestore db = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final TextEditingController txc = TextEditingController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    txc.addListener(() {});
+    c.init();
+    c.txc.addListener(() {});
   }
 
   @override
   void dispose() {
     // 텍스트에디팅컨트롤러를 제거하고, 등록된 리스너도 제거된다.
-    txc.dispose();
+    c.txc.dispose();
+    Get.delete<BoardController>();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    RefreshController refreshController =
+        RefreshController(initialRefresh: false);
+
+    Future onRefresh() async {
+      // monitor network fetch
+      await Future.delayed(const Duration(milliseconds: 1000));
+      // if failed,use refreshFailed()
+
+      refreshController.refreshCompleted();
+    }
+
     return Scaffold(
       body: Container(
         child: Column(
           children: [
             TextField(
-                controller: txc,
+                controller: c.txc,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -48,43 +61,25 @@ class _BoardState extends State<Board> {
                 )),
             ElevatedButton(
               onPressed: () {
-                if (_auth != null) {
-                  if (txc.text.isNotEmpty) {
-                    db.collection('board').add({
-                      'writer': _auth.currentUser!.email,
-                      'name': _auth.currentUser!.displayName,
-                      'timestamp': Timestamp.now(),
-                      'title': txc.text,
-                      'content': txc.text,
-                      'replycount': 0,
-                    });
-                  } else {
-                    print(0);
-                  }
-                } else {
-                  print('login');
-                }
+                c.boardadd();
               },
-              child: Text('add'),
+              child: const Text('add'),
             ),
             Expanded(
-                child: FutureBuilder(
-              future: db
-                  .collection('board')
-                  .orderBy('timestamp', descending: true)
-                  .get(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData) {
-                  return const SizedBox(
-                      height: 50, child: CircularProgressIndicator());
-                } else {
-                  return ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
+              child: GetBuilder<BoardController>(
+                builder: (_) => SmartRefresher(
+                  enablePullDown: true,
+                  enablePullUp: false,
+                  header: const ClassicHeader(),
+                  controller: refreshController,
+                  onRefresh: onRefresh,
+                  child: ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: c.list.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          Get.to(Boardview(),
-                              arguments: snapshot.data!.docs[index].id);
+                          Get.to(const Boardview(), arguments: c.list[index].id);
                         },
                         child: Container(
                           decoration: const BoxDecoration(
@@ -95,23 +90,21 @@ class _BoardState extends State<Board> {
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
-                                Text(snapshot.data!.docs[index]['title']),
-                                Text(snapshot.data!.docs[index]['writer']),
-                                Text(snapshot.data!.docs[index]['replycount']
-                                    .toString()),
-                                Text(datetime(
-                                    snapshot.data!.docs[index]['timestamp'])),
-                                Text(snapshot.data!.docs[index]['name']),
+                                Text(c.list[index].title),
+                                Text(c.list[index].writer),
+                                Text(c.list[index].replycount.toString()),
+                                Text(datetime(c.list[index].ts)),
+                                Text(c.list[index].name),
                               ],
                             ),
                           ),
                         ),
                       );
                     },
-                  );
-                }
-              },
-            )),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
