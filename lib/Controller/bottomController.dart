@@ -23,7 +23,7 @@ class BottomNaviController extends GetxController {
     } else if (index == 3){
       titletext.value = '설정';
     } else {
-      titletext.value = 'app t';
+      titletext.value = '랭킹 5';
     }
     update();
   }

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:voteapp/Controller/CategoryController.dart';
 import 'package:voteapp/Controller/bottomController.dart';
 import 'package:voteapp/screen/board.dart';
 import 'package:voteapp/screen/votelist.dart';

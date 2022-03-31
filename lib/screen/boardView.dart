@@ -15,45 +15,74 @@ class Boardview extends StatelessWidget {
       appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Obx(
-              () => Text(
-                c.title.value,
-                style: TextStyle(
-                  fontSize: 20.0,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              Obx(
+                () => Text(
+                  c.title.value,
+                  style: const TextStyle(
+                    fontSize: 20.0,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Obx(() => Text(c.name.value)),
-                Obx(() => Text(c.time.value)),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-              width: double.maxFinite,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                    border:
-                        Border(bottom: BorderSide(color: Colors.grey,
-                        width: 1.0)),
-                ),
+              const SizedBox(
+                height: 10,
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Obx(() => Text(c.content.value)),
-          ],
-        )),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Obx(() => Text(c.name.value)),
+                  Obx(() => Text(c.time.value)),
+                ],
+              ),
+              const Divider(
+                thickness: 2,
+                height: 40,
+              ),
+              Obx(
+                () => Text(c.content.value,
+                    style: (const TextStyle(
+                      fontSize: 14.0,
+                    ))),
+              ),
+            ],
+          ),
+        ),
+      ),
+      bottomSheet: SafeArea(
+        child: SizedBox(
+          width: double.infinity,
+          height: 50,
+          child: Column(
+            children: [
+              const Divider(
+                thickness: 2,
+                height: 2,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: c.txc,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      c.replyadd(c.txc.text);
+                      c.txc.text = '';
+                    },
+                    child: const Text('등록'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
