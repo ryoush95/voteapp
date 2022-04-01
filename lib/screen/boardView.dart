@@ -16,6 +16,7 @@ class Boardview extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -40,15 +41,98 @@ class Boardview extends StatelessWidget {
                   Obx(() => Text(c.time.value)),
                 ],
               ),
+              Obx(()=>Text('댓글 ${c.replycount.value}')),
               const Divider(
                 thickness: 2,
                 height: 40,
               ),
               Obx(
-                () => Text(c.content.value,
-                    style: (const TextStyle(
-                      fontSize: 14.0,
-                    ))),
+                () => Text(
+                  c.content.value,
+                  style: (const TextStyle(
+                    fontSize: 18.0,
+                  )),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    child: const Text('목록으로')),
+              ),
+              SizedBox(
+                height: 50,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    const Text('댓글'),
+                    IconButton(
+                        onPressed: () {
+                          c.replyrefresh();
+                        },
+                        icon: const Icon(Icons.refresh_rounded)),
+                  ],
+                ),
+              ),
+              const Divider(
+                thickness: 2,
+                height: 20,
+              ),
+              Obx(
+                () => ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: c.replylist.length,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                c.replylist[index]['name'],
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                              IconButton(
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                onPressed: () {
+                                  c.replydelete(c.replylist[index].id);
+                                },
+                                icon: const Icon(
+                                  Icons.delete,
+                                  size: 16,
+                                ),
+                              ),
+                            ]),
+                        Text(
+                          c.replylist[index]['content'],
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          c.replytime(index),
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                        const Divider(
+                          thickness: 2,
+                          height: 20,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(
+                height: 40,
               ),
             ],
           ),

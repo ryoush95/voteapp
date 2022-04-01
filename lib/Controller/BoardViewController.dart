@@ -14,7 +14,8 @@ class BoardViewController extends GetxController {
   RxString name = ''.obs;
   RxString time = ''.obs;
   RxString category = ''.obs;
-  int replycount = 0;
+  RxInt replycount = 0.obs;
+  RxList replylist = [].obs;
 
   @override
   void onInit() {
@@ -30,33 +31,98 @@ class BoardViewController extends GetxController {
         title.value = data!['title'];
         name.value = data['name'];
         content.value = data['content'];
-        Timestamp ts = data['timestamp'];
-        DateTime da = ts.toDate();
-        String t = DateFormat('yyyy-MM-dd HH:mm').format(da);
-        time.value = t;
-        replycount = data['replycount'];
+        time.value = datetime(data['timestamp']);
+        replycount.value = data['replycount'];
         // name = data['name'];
       }
     });
 
-    // await db.collection('board').doc(room).collection('reply').
+    await db
+        .collection('board')
+        .doc(room)
+        .collection('reply')
+        .orderBy('timestamp', descending: true)
+        .get()
+        .then((value) => value.docs.forEach((e) {
+              replylist.add(e);
+            }));
   }
 
-  void replyadd(String content) async{
+  void replyadd(String content) async {
     String name = '';
-    await db.collection('votemember').doc(_auth.currentUser!.email).get().then(
-            (value) => name = value.data()!['name']);
-    print(name);
-    db.collection('board').doc(room).collection('reply').doc().set({
+    await db
+        .collection('votemember')
+        .doc(_auth.currentUser!.email)
+        .get()
+        .then((value) => name = value.data()!['name']);
+    await db.collection('board').doc(room).collection('reply').doc().set({
       'writer': _auth.currentUser!.email,
-      'content' : content,
+      'content': content,
       'timestamp': Timestamp.now(),
       'name': name,
     });
-    print(replycount);
-    replycount += 1;
+    replycount.value += 1;
+    replyCountUpdate();
+    replyrefresh();
+  }
+
+  void replyrefresh() async {
+    replylist.clear();
+    await db
+        .collection('board')
+        .doc(room)
+        .collection('reply')
+        .orderBy('timestamp', descending: true)
+        .get()
+        .then((value) => value.docs.forEach((e) {
+              replylist.add(e);
+            }));
+    update();
+  }
+
+  void replydelete(String id) {
+    Get.dialog(AlertDialog(
+      content: const Text('댓글을 삭제하시겠습니까?'),
+      actions: [
+        TextButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: const Text('아니요')),
+        TextButton(
+            onPressed: () {
+              db
+                  .collection('board')
+                  .doc(room)
+                  .collection('reply')
+                  .doc(id)
+                  .delete();
+              replycount.value -= 1;
+              replyCountUpdate();
+              replyrefresh();
+              Get.back();
+            },
+            child: const Text('네')),
+      ],
+    ));
+  }
+
+  void replyCountUpdate() {
     db.collection('board').doc(room).update({
-      'replycount': replycount,
+      'replycount': replycount.value,
     });
+  }
+
+  String datetime(Timestamp date) {
+    DateTime da = date.toDate();
+    String ts = DateFormat('yyyy-MM-dd HH:mm').format(da);
+    return ts;
+  }
+
+  String replytime(int index) {
+    var date = replylist[index]['timestamp'];
+    DateTime da = date.toDate();
+    String ts = DateFormat('MM-dd HH:mm').format(da);
+    return ts;
   }
 }
