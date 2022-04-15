@@ -28,6 +28,7 @@ class Boardview extends StatelessWidget {
                   c.title.value,
                   style: const TextStyle(
                     fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -37,11 +38,16 @@ class Boardview extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Obx(() => Text(c.name.value)),
-                  Obx(() => Text(c.time.value)),
+                  Obx(() => Text("${c.name.value} (댓글 ${c.replycount.value})",
+                  style: const TextStyle(
+                    color: Colors.grey,
+                  ),)),
+                  Obx(() => Text(c.time.value,
+                    style: const TextStyle(
+                      color: Colors.grey,
+                    ),)),
                 ],
               ),
-              Obx(()=>Text('댓글 ${c.replycount.value}')),
               const Divider(
                 thickness: 2,
                 height: 40,
@@ -55,7 +61,7 @@ class Boardview extends StatelessWidget {
                 ),
               ),
               const SizedBox(
-                height: 20,
+                height: 80,
               ),
               SizedBox(
                 width: double.infinity,
@@ -72,10 +78,11 @@ class Boardview extends StatelessWidget {
                   children: [
                     const Text('댓글'),
                     IconButton(
-                        onPressed: () {
-                          c.replyrefresh();
-                        },
-                        icon: const Icon(Icons.refresh_rounded)),
+                      onPressed: () {
+                        c.replyrefresh();
+                      },
+                      icon: const Icon(Icons.refresh_rounded),
+                    ),
                   ],
                 ),
               ),
@@ -83,54 +90,7 @@ class Boardview extends StatelessWidget {
                 thickness: 2,
                 height: 20,
               ),
-              Obx(
-                () => ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: c.replylist.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                c.replylist[index]['name'],
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              IconButton(
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                                onPressed: () {
-                                  c.replydelete(c.replylist[index].id);
-                                },
-                                icon: const Icon(
-                                  Icons.delete,
-                                  size: 16,
-                                ),
-                              ),
-                            ]),
-                        Text(
-                          c.replylist[index]['content'],
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          c.replytime(index),
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                        const Divider(
-                          thickness: 2,
-                          height: 20,
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
+              reply(c),
               const SizedBox(
                 height: 40,
               ),
@@ -150,6 +110,9 @@ class Boardview extends StatelessWidget {
               ),
               Row(
                 children: [
+                  const SizedBox(
+                    width: 10.0,
+                  ),
                   Expanded(
                     child: TextField(
                       controller: c.txc,
@@ -167,6 +130,55 @@ class Boardview extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget reply(c) {
+    return Obx(
+      () => ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: c.replylist.length,
+        itemBuilder: (context, index) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Text(
+                  c.replylist[index]['name'],
+                  style: const TextStyle(fontSize: 14),
+                ),
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  onPressed: () {
+                    c.replydelete(c.replylist[index].id);
+                  },
+                  icon: const Icon(
+                    Icons.delete,
+                    size: 16,
+                  ),
+                ),
+              ]),
+              Text(
+                c.replylist[index]['content'],
+                style: const TextStyle(fontSize: 14),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                c.replytime(index),
+                style: const TextStyle(color: Colors.grey),
+              ),
+              const Divider(
+                thickness: 2,
+                height: 20,
+              ),
+            ],
+          );
+        },
       ),
     );
   }

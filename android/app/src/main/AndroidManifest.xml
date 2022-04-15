@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sogeum.voteapp">
    <application
-        android:label="voteapp"
+        android:label="랭킹5"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

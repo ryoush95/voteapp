@@ -53,8 +53,27 @@ class BoardController extends GetxController {
   }
 
   String datetime(Timestamp date) {
-    DateTime da = date.toDate();
-    String ts = DateFormat('yyyy-MM-dd HH:mm').format(da);
-    return ts;
+    final now = Timestamp.now().toDate();
+    print(DateTime(
+      now.year,
+      now.month,
+      now.day
+    ).difference(
+      DateTime(
+      date.toDate().year,
+      date.toDate().month,
+      date.toDate().day
+      )
+    ).inDays);
+    // if(duration){
+      DateTime da = date.toDate();
+      String ts = DateFormat('yyyy-MM-dd HH:mm').format(da);
+      return ts;
+    // } else {
+    //   DateTime da = date.toDate();
+    //   String ts = DateFormat('yyyy-MM-dd HH:mm').format(da);
+    //   return ts;
+    // }
+
   }
 }

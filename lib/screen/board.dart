@@ -24,8 +24,7 @@ class _BoardState extends State<Board> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    String arg = widget.arguments;
-    c.init(arg);
+    c.init(widget.arguments);
     c.txc.addListener(() {});
   }
 
@@ -46,7 +45,8 @@ class _BoardState extends State<Board> {
       // monitor network fetch
       await Future.delayed(const Duration(milliseconds: 1000));
       // if failed,use refreshFailed()
-
+      c.list.clear();
+      c.init(widget.arguments);
       refreshController.refreshCompleted();
     }
 
@@ -92,11 +92,20 @@ class _BoardState extends State<Board> {
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
-                                Text(c.list[index].title),
-                                Text(c.list[index].writer),
-                                Text(c.list[index].replycount.toString()),
-                                Text(c.list[index].ts),
-                                Text(c.list[index].name),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(c.list[index].title),
+                                    Text(c.list[index].replycount.toString()),
+                                  ],
+                                ),
+                                // Text(c.list[index].writer),
+                                Row(
+                                  children: [
+                                    Text(c.list[index].ts),
+                                    Text(c.list[index].name),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
