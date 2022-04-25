@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:voteapp/screen/boardAdd.dart';
 
 import '../Controller/BoardViewController.dart';
 
@@ -12,7 +13,16 @@ class Boardview extends StatelessWidget {
     final BoardViewController c = Get.find();
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          ElevatedButton(onPressed: (){
+            Get.off(boardAdd(),arguments: c.docId);
+          },child: Text('수정'),),
+          ElevatedButton(onPressed: (){
+            c.boardDelete();
+          },child: Text('삭제'),),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(

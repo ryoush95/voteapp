@@ -16,6 +16,7 @@ class BoardViewController extends GetxController {
   RxString category = ''.obs;
   RxInt replycount = 0.obs;
   RxList replylist = [].obs;
+  String? docId;
 
   @override
   void onInit() {
@@ -26,6 +27,7 @@ class BoardViewController extends GetxController {
 
   void init() async {
     await db.collection('board').doc(room).get().then((value) {
+      docId = value.id;
       if (value.exists) {
         Map<String, dynamic>? data = value.data();
         title.value = data!['title'];
@@ -46,6 +48,24 @@ class BoardViewController extends GetxController {
         .then((value) => value.docs.forEach((e) {
               replylist.add(e);
             }));
+  }
+
+  void boardDelete(){
+    Get.dialog(
+      AlertDialog(
+        title: Text('삭제하시겠습니까?'),
+        actions: [
+          TextButton(onPressed: (){
+            db.collection('board').doc(docId).delete();
+            Get.back();
+            Get.back();
+          }, child: Text('ok')),
+          TextButton(onPressed: (){
+            Get.back();
+          }, child: Text('cancel'))
+        ],
+      )
+    );
   }
 
   void replyadd(String content) async {
