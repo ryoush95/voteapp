@@ -62,7 +62,7 @@ class HomeController extends GetxController {
     var random = Random().nextInt(3);
     String img;
 
-    db.orderBy('timestamp').limit(3).get().then((value) {
+    db.orderBy('timestamp', descending: true).limit(3).get().then((value) {
       newuid = value.docs[random].id;
       newname = value.docs[random]['title'];
       db

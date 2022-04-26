@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:need_resume/need_resume.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:voteapp/Controller/BoardController.dart';
 
@@ -16,7 +15,7 @@ class Board extends StatefulWidget {
   State<Board> createState() => _BoardState();
 }
 
-class _BoardState extends State<Board> {
+class _BoardState extends ResumableState<Board> {
   BoardController c = Get.put(BoardController());
   FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -34,6 +33,15 @@ class _BoardState extends State<Board> {
     // c.txc.dispose();
     Get.delete<BoardController>();
     super.dispose();
+  }
+
+  @override
+  void onResume() {
+    // TODO: implement onResume
+    print('wwwwwwwwwwwwwwwwwwwwwwwwwww');
+    c.list.clear();
+    c.init(widget.arguments);
+    super.onResume();
   }
 
   @override

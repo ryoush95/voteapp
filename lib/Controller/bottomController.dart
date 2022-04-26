@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
@@ -29,11 +30,22 @@ class BottomNaviController extends GetxController {
   }
 
   Future<bool> onWillPop() async{
+
     setCategoryPage(false);
     if(selectIndex.value == 2) {
-      return !await navigatorKey2.currentState!.maybePop();
+      //true = 첫화면 false = 카테고리 페이지
+      if(!await navigatorKey2.currentState!.maybePop()){
+        exitalert();
+      }
+      return false;
+    } else if (selectIndex.value == 1){
+      if(!await navigatorKey.currentState!.maybePop()){
+        exitalert();
+      }
+      return false;
     } else {
-      return !await navigatorKey.currentState!.maybePop();
+      exitalert();
+      return false;
     }
   }
 
@@ -44,6 +56,22 @@ class BottomNaviController extends GetxController {
   void back() {
     setCategoryPage(false);
     onWillPop();
+  }
+
+  void exitalert(){
+    Get.dialog(
+        AlertDialog(
+          title: Text('앱종료?'),
+          actions: [
+            TextButton(onPressed: (){
+              Get.back();
+            }, child: Text('no')),
+            TextButton(onPressed: (){
+              SystemNavigator.pop();
+            }, child: Text('yes'))
+          ],
+        )
+    );
   }
 
 
