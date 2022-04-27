@@ -15,12 +15,22 @@ class Boardview extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          ElevatedButton(onPressed: (){
-            Get.off(boardAdd(),arguments: c.docId);
-          },child: Text('수정'),),
-          ElevatedButton(onPressed: (){
-            c.boardDelete();
-          },child: Text('삭제'),),
+          ElevatedButton(
+            onPressed: () async {
+              final bool refresh = await Get.to(boardAdd(), arguments: c.docId);
+
+              if(refresh){
+                c.init();
+              }
+            },
+            child: Text('수정'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              c.boardDelete();
+            },
+            child: Text('삭제'),
+          ),
         ],
       ),
       body: Padding(
@@ -48,14 +58,18 @@ class Boardview extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Obx(() => Text("${c.name.value} (댓글 ${c.replycount.value})",
-                  style: const TextStyle(
-                    color: Colors.grey,
-                  ),)),
-                  Obx(() => Text(c.time.value,
-                    style: const TextStyle(
-                      color: Colors.grey,
-                    ),)),
+                  Obx(() => Text(
+                        "${c.name.value} (댓글 ${c.replycount.value})",
+                        style: const TextStyle(
+                          color: Colors.grey,
+                        ),
+                      )),
+                  Obx(() => Text(
+                        c.time.value,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                        ),
+                      )),
                 ],
               ),
               const Divider(
@@ -77,7 +91,7 @@ class Boardview extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                     onPressed: () {
-                      Get.back();
+                      Get.back(result: true);
                     },
                     child: const Text('목록으로')),
               ),

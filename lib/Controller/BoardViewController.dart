@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -50,22 +52,24 @@ class BoardViewController extends GetxController {
             }));
   }
 
-  void boardDelete(){
-    Get.dialog(
-      AlertDialog(
-        title: Text('삭제하시겠습니까?'),
-        actions: [
-          TextButton(onPressed: (){
-            db.collection('board').doc(docId).delete();
-            Get.back();
-            Get.back();
-          }, child: Text('ok')),
-          TextButton(onPressed: (){
-            Get.back();
-          }, child: Text('cancel'))
-        ],
-      )
-    );
+  void boardDelete() {
+    Get.dialog(AlertDialog(
+      title: const Text('삭제하시겠습니까?'),
+      actions: [
+        TextButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: const Text('cancel')),
+        TextButton(
+            onPressed: () {
+              db.collection('board').doc(docId).delete();
+              Get.back(result: true);
+              Get.back(result: true);
+            },
+            child: const Text('ok')),
+      ],
+    ));
   }
 
   void replyadd(String content) async {

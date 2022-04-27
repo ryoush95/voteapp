@@ -10,13 +10,14 @@ import '../screen/boardAdd.dart';
 class BoardController extends GetxController {
   // final TextEditingController txc = TextEditingController();
   FirebaseFirestore db = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  List list = [];
 
-  void init(String cate) async {
+  List list = [];
+  String cateId = '';
+
+  void init() async {
     await db
         .collection('board')
-        .where('category', isEqualTo: cate)
+        .where('category', isEqualTo: cateId)
         .orderBy('timestamp', descending: true)
         .get()
         .then(
@@ -35,9 +36,15 @@ class BoardController extends GetxController {
     update();
   }
 
-  void getAuth() {
+  Future<void> getAuth() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
     if (_auth.currentUser != null){
-      Get.to(boardAdd());
+      final bool refreshPage = await Get.to(const boardAdd(),arguments: null);
+      print(refreshPage);
+      if(refreshPage) {
+        list.clear();
+        init();
+      }
     } else {
       Get.to(Login());
     }

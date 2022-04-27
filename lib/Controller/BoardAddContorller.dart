@@ -45,14 +45,16 @@ class BoardAddController extends GetxController {
   void boardadd() {
     //no blank
     if (title.text.isNotEmpty && content.text.isNotEmpty) {
+      //수정
       if(docId != null){
        db.collection('board').doc(docId).update({
          'title': title.text,
          'content' : content.text,
        }).then((value) {
-         Get.back();
+         Get.back(result: true);
        });
       }else {
+        //새 글
         db.collection('board').add({
           'writer': _auth.currentUser!.email,
           'name': name.value,
@@ -62,8 +64,8 @@ class BoardAddController extends GetxController {
           'replycount': 0,
           'category': 'a',
         }).then((value) {
+          Get.back(result: true);
           Fluttertoast.showToast(msg: '게시물 등록');
-          Get.back();
         });
       }
     } else {

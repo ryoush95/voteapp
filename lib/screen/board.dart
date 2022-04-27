@@ -23,7 +23,8 @@ class _BoardState extends ResumableState<Board> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    c.init(widget.arguments);
+    c.cateId = widget.arguments;
+    c.init();
     // c.txc.addListener(() {});
   }
 
@@ -38,9 +39,8 @@ class _BoardState extends ResumableState<Board> {
   @override
   void onResume() {
     // TODO: implement onResume
-    print('wwwwwwwwwwwwwwwwwwwwwwwwwww');
     c.list.clear();
-    c.init(widget.arguments);
+    c.init();
     super.onResume();
   }
 
@@ -54,7 +54,7 @@ class _BoardState extends ResumableState<Board> {
       await Future.delayed(const Duration(milliseconds: 1000));
       // if failed,use refreshFailed()
       c.list.clear();
-      c.init(widget.arguments);
+      c.init();
       refreshController.refreshCompleted();
     }
 
@@ -69,8 +69,7 @@ class _BoardState extends ResumableState<Board> {
           //       ),
           //     )),
           ElevatedButton(
-            onPressed: () {
-              // c.boardadd();
+            onPressed: () async {
               c.getAuth();
             },
             child: const Text('글쓰기'),
@@ -88,15 +87,18 @@ class _BoardState extends ResumableState<Board> {
                   itemCount: c.list.length,
                   itemBuilder: (context, index) {
                     return InkWell(
-                      onTap: () {
-                        Get.to(const Boardview(),
+                      onTap: () async {
+                        final bool refresh = await Get.to(const Boardview(),
                             arguments: c.list[index].id);
+                        if(refresh) {
+                          c.list.clear();
+                          c.init();
+                        }
                       },
                       child: Container(
                         decoration: const BoxDecoration(
                           border: Border(
-                              bottom:
-                                  BorderSide(color: Colors.grey, width: 1)),
+                              bottom: BorderSide(color: Colors.grey, width: 1)),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
