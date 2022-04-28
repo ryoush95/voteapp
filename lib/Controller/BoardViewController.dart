@@ -16,9 +16,11 @@ class BoardViewController extends GetxController {
   RxString name = ''.obs;
   RxString time = ''.obs;
   RxString category = ''.obs;
+  String? writer;
   RxInt replycount = 0.obs;
   RxList replylist = [].obs;
   String? docId;
+  RxBool idCheck =false.obs;
 
   @override
   void onInit() {
@@ -37,7 +39,8 @@ class BoardViewController extends GetxController {
         content.value = data['content'];
         time.value = datetime(data['timestamp']);
         replycount.value = data['replycount'];
-        // name = data['name'];
+        writer = data['writer'];
+        writer == _auth.currentUser!.email ? idCheck.value = true : idCheck.value = false;
       }
     });
 
@@ -47,9 +50,11 @@ class BoardViewController extends GetxController {
         .collection('reply')
         .orderBy('timestamp', descending: true)
         .get()
-        .then((value) => value.docs.forEach((e) {
-              replylist.add(e);
-            }));
+        .then(
+          (value) => value.docs.forEach((e) {
+            replylist.add(e);
+          }),
+        );
   }
 
   void boardDelete() {

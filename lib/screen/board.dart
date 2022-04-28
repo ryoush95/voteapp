@@ -58,6 +58,15 @@ class _BoardState extends ResumableState<Board> {
       refreshController.refreshCompleted();
     }
 
+    Widget listText(String text){
+      return Text(
+        text,
+        style: const TextStyle(
+          color: Colors.grey,
+        ),
+      );
+    }
+
     return Scaffold(
       body: Column(
         children: [
@@ -128,18 +137,8 @@ class _BoardState extends ResumableState<Board> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    c.list[index].name,
-                                    style: const TextStyle(
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  Text(
-                                    c.list[index].ts,
-                                    style: const TextStyle(
-                                      color: Colors.grey,
-                                    ),
-                                  ),
+                                  listText(c.list[index].name),
+                                  listText(c.list[index].ts)
                                 ],
                               ),
                             ],
