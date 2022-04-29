@@ -14,6 +14,7 @@ class VoteController extends GetxController {
   RxString uid = ''.obs;
   var fs = FirebaseStorage.instance.ref('profile');
   String? imageUrl;
+  List mylist = [];
 
   @override
   void onReady() {
@@ -66,12 +67,23 @@ class VoteController extends GetxController {
         .doc(uid.value)
         .collection(uid.value)
         .doc(votelist[index].id);
-    var votemember = db.collection('votemember').doc(_auth.currentUser!.email);
+    final votemember = db.collection('votemember').doc(_auth.currentUser!.email);
 
     //투표버튼 클릭
     votemember.get().then((value) {
+      mylist = value.data()!['voteList'];
+      int i = 0;
+      var dist = false;
+      while (i < mylist.length){
+        if(mylist[i] == uid.value){
+          dist = true;
+          break;
+        }
+        i++;
+      }
+      print(mylist);
       //중복투표
-      if (value.data()![uid.value] != null) {
+      if (dist) {
         Get.dialog(AlertDialog(
           title: const Text('중복투표'),
           actions: [
@@ -110,7 +122,8 @@ class VoteController extends GetxController {
                     'name': _auth.currentUser!.displayName,
                   });
                   //votemember에 추가 중복투표 방지
-                  // votemember.update({uid.value: uid.value});
+                  mylist.add(uid.value);
+                  votemember.update({'voteList': mylist});
                   //새로고침
                   votelist.clear();
                   voterank();
