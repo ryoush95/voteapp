@@ -21,11 +21,11 @@ class BottomNavigation extends StatelessWidget {
         appBar: AppBar(
           title: Obx(()=> Text(c.titletext.value)),
           actions: [
-            IconButton(onPressed: (){
-              Get.to(const voteAdd());
-            },
-                icon: const Icon(Icons.add),
-            ),
+            // IconButton(onPressed: (){
+            //   Get.to(const voteAdd());
+            // },
+            //     icon: const Icon(Icons.add),
+            // ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 8.0, 0),
               child: IconButton(

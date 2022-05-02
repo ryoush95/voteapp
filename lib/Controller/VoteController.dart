@@ -55,7 +55,7 @@ class VoteController extends GetxController {
 
   ImageProvider? circle(int index) {
     if (votelist[index].img == '') {
-      return const AssetImage('images/appicon.png');
+      return const AssetImage('images/noimg.jpg');
     } else {
       return NetworkImage(votelist[index].img);
     }

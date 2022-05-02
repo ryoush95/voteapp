@@ -33,13 +33,15 @@ class HomeController extends GetxController {
   }
 
   Future hotinit() async {
+    var random = Random().nextInt(2);
     String img;
-    await db.orderBy('allcount', descending: true).limit(1).get().then((value) {
-      hotuid = value.docs[0].id;
-      hotname = value.docs[0]['title'];
+
+    await db.orderBy('allcount', descending: true).limit(2).get().then((value) {
+      hotuid = value.docs[random].id;
+      hotname = value.docs[random]['title'];
       db
           .doc(hotuid)
-          .collection(value.docs[0].id)
+          .collection(value.docs[random].id)
           .orderBy('votecount', descending: true)
           .limit(5)
           .get()
@@ -88,7 +90,7 @@ class HomeController extends GetxController {
 
   ImageProvider? circle(List list, int index) {
     if (list[index].img == '') {
-      return const AssetImage('images/appicon.png');
+      return const AssetImage('images/noimg.jpg');
     } else {
       return NetworkImage(list[index].img);
     }

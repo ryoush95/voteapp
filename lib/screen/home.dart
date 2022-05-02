@@ -16,13 +16,20 @@ class Home extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(children: [
-              const Text('지금 핫한 투표함'),
-              IconButton(onPressed: (){
-                c.hotlist.clear();
-                c.newlist.clear();
-                c.hotinit();
-                c.newinit();
-              }, icon: const Icon(Icons.refresh))
+              const Text(
+                '지금 핫한 투표함',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              IconButton(
+                  onPressed: () {
+                    c.hotlist.clear();
+                    c.newlist.clear();
+                    c.hotinit();
+                    c.newinit();
+                  },
+                  icon: const Icon(Icons.refresh))
             ]),
             const Text(''),
             SizedBox(
@@ -80,7 +87,12 @@ class Home extends StatelessWidget {
                   c.toVote(1);
                 },
                 child: const Text('이 투표함으로')),
-            const Text('새로나온 투표함'),
+            const Text(
+              '새로나온 투표함',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
             const Text(''),
             SizedBox(
               height: 350,

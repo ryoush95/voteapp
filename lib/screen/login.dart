@@ -44,6 +44,9 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     final gSigninController c = Get.find();
     return Scaffold(
+      appBar: AppBar(
+        title: Text('로그인'),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
