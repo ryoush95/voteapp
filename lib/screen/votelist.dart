@@ -40,7 +40,7 @@ class _VoteListState extends State<VoteList> {
 
     Future onRefresh() async {
       // monitor network fetch
-      await Future.delayed(Duration(milliseconds: 1000));
+      await Future.delayed(const Duration(milliseconds: 1000));
       // if failed,use refreshFailed()
       c.list.clear();
       c.init(widget.arguments);
@@ -83,7 +83,7 @@ class _VoteListState extends State<VoteList> {
                                     ),
                                   ),
                                   Text(
-                                    '${c.list[index].votecount.toString()} 표',
+                                    '${c.list[index].votecount.toString()}명 참여중',
                                     style: const TextStyle(
                                       fontSize: 20.0,
                                     ),

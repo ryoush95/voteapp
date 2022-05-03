@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 
 class BoardViewController extends GetxController {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   String room = Get.arguments;
   final txc = TextEditingController();
   RxString title = ''.obs;
@@ -27,6 +27,14 @@ class BoardViewController extends GetxController {
     // TODO: implement onInit
     super.onInit();
     init();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    txc.dispose();
+    BoardViewController().dispose();
   }
 
   void init() async {

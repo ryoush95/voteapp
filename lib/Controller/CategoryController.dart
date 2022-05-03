@@ -10,7 +10,6 @@ class CategoryController extends GetxController{
     await db.collection('category').get().then((value) =>
         value.docs.forEach((element) {
           list.add(element.data()['cate']);
-          // print(list);
         })
     );
   }

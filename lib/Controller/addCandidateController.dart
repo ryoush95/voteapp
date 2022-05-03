@@ -14,7 +14,7 @@ class AddCandidateController extends GetxController {
 
   String? email = FirebaseAuth.instance.currentUser?.email;
   XFile? pickImage;
-  String? fileName;
+  String fileName = '';
   String? url;
 
   FirebaseStorage fs = FirebaseStorage.instance;
@@ -36,6 +36,10 @@ class AddCandidateController extends GetxController {
   void submit(String name, String memo) async {
     if (pickImage == null) {
       url = '';
+    } else {
+      UploadTask ut =
+          fs.ref('profile').child(fileName).putFile(File(pickImage!.path));
+      url = await (await ut).ref.getDownloadURL();
     }
     if (name == '' || memo == '') {
       Fluttertoast.showToast(
@@ -44,9 +48,6 @@ class AddCandidateController extends GetxController {
         backgroundColor: Colors.black45,
       );
     } else {
-      UploadTask ut =
-          fs.ref('profile').child(fileName!).putFile(File(pickImage!.path));
-      url = await (await ut).ref.getDownloadURL();
       FirebaseFirestore.instance
           .collection('vote')
           .doc(uid.value)
@@ -58,8 +59,7 @@ class AddCandidateController extends GetxController {
         'timestamp': Timestamp.now(),
         'auth': FirebaseAuth.instance.currentUser?.email,
         'image': url
-      });
-      Get.back();
+      }).then((value) => Get.back(result: true));
     }
   }
 }

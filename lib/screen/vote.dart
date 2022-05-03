@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:voteapp/screen/addCandidate.dart';
+import 'package:voteapp/screen/voteDetail.dart';
 
 import '../Controller/VoteController.dart';
+import 'login.dart';
 
 class Vote extends StatelessWidget {
   const Vote({Key? key}) : super(key: key);
@@ -25,7 +27,21 @@ class Vote extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 8.0, 0),
+            child: IconButton(
+                onPressed: () {
+                  Get.to(Login());
+                },
+                icon: const Icon(
+                  Icons.person,
+                  size: 30,
+                )),
+          )
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -39,8 +55,14 @@ class Vote extends StatelessWidget {
                       style: const TextStyle(fontSize: 20.0),
                     ),
                     TextButton(
-                        onPressed: () {
-                          Get.to(const AddCandidate(), arguments: c.uid.value);
+                        onPressed: () async {
+                          bool result = await Get.to(const AddCandidate(),
+                              arguments: c.uid.value);
+
+                          if (result) {
+                            c.votelist.clear();
+                            c.voterank();
+                          }
                         },
                         child: const Text('후보 추가'))
                   ]),
@@ -59,48 +81,54 @@ class Vote extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            "${index + 1}",
-                            style: const TextStyle(
-                              fontSize: 18,
+                      child: GestureDetector(
+                        onTap: () => Get.to(VoteDetail(),
+                            arguments: {
+                          'uid' : Get.arguments['uid'],
+                          'doc' : c.votelist[index].id}),
+                        child: Row(
+                          children: [
+                            Text(
+                              "${index + 1}",
+                              style: const TextStyle(
+                                fontSize: 18,
+                              ),
                             ),
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          SizedBox(
-                            height: 50,
-                            width: 50,
-                            child: CircleAvatar(
-                              backgroundImage: c.circle(index),
-                              radius: 30,
+                            const SizedBox(
+                              width: 20,
                             ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            c.votelist[index].title,
-                            style: const TextStyle(
-                              fontSize: 18,
+                            SizedBox(
+                              height: 50,
+                              width: 50,
+                              child: CircleAvatar(
+                                backgroundImage: c.circle(index),
+                                radius: 30,
+                              ),
                             ),
-                          ),
-                          const Expanded(child: SizedBox()),
-                          Text(
-                            "${c.votelist[index].votecount.toString()} 표 ",
-                            style: const TextStyle(
-                              fontSize: 18,
+                            const SizedBox(
+                              width: 10,
                             ),
-                          ),
-                          ElevatedButton(
-                              onPressed: () {
-                                c.voting(index);
-                                // print(c.votelist[index].id);
-                              },
-                              child: const Text('투표')),
-                        ],
+                            Text(
+                              c.votelist[index].title,
+                              style: const TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                            const Expanded(child: SizedBox()),
+                            Text(
+                              "${c.votelist[index].votecount.toString()} 표 ",
+                              style: const TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                            ElevatedButton(
+                                onPressed: () {
+                                  c.voting(index);
+                                  // print(c.votelist[index].id);
+                                },
+                                child: const Text('투표')),
+                          ],
+                        ),
                       ),
                     );
                   },

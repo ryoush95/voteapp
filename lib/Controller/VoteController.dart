@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,11 +7,10 @@ import '../model.dart';
 
 class VoteController extends GetxController {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   RxList<dynamic> votelist = <dynamic>[].obs;
   RxInt num = 0.obs;
   RxString uid = ''.obs;
-  var fs = FirebaseStorage.instance.ref('profile');
   String? imageUrl;
   List mylist = [];
 

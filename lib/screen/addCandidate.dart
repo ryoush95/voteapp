@@ -31,7 +31,9 @@ class _AddCandidateState extends State<AddCandidate> {
     c.uid.value = Get.arguments;
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text('후보등록'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(

@@ -15,7 +15,9 @@ class voteAdd extends StatelessWidget {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: const Text('새 투표'),
+        ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Obx(
