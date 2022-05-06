@@ -55,13 +55,12 @@ class _VoteListState extends State<VoteList> {
               header: const ClassicHeader(),
               controller: refreshController,
               onRefresh: onRefresh,
-              child: Obx(() => ListView.builder(
+              child: Obx(() => c.list.isEmpty
+                  ? const Center(child: Text('아직 투표함이 없어요'))
+                  : ListView.builder(
                   physics: const BouncingScrollPhysics(),
                   itemCount: c.list.length,
                   itemBuilder: (context, index) {
-                    if (c.list.isEmpty) {
-                      return const CircularProgressIndicator();
-                    } else {
                       return InkWell(
                         onTap: () => Get.to(const Vote(), arguments: {
                           'uid': c.list[index].id,
@@ -92,7 +91,6 @@ class _VoteListState extends State<VoteList> {
                               ),
                             )),
                       );
-                    }
                   }),
             )),
       ),

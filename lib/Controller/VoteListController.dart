@@ -18,6 +18,7 @@ class VoteListController extends GetxController {
             votecount: e.data()['allcount']));
       }),
     );
+    print(list.length);
     update();
   }
 

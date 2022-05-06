@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:voteapp/screen/CreateAccount.dart';
 
 class gSigninController extends GetxController {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final _auth = FirebaseAuth.instance;
   FirebaseFirestore db = FirebaseFirestore.instance;
   RxString name = '정보없음'.obs;
   RxString email = ''.obs;
@@ -24,18 +26,28 @@ class gSigninController extends GetxController {
     }
   }
 
-  void adduser() {
-    db
+  void adduser() async {
+    // print(_auth.currentUser!.uid);
+    await db
         .collection('votemember')
-        .where('email', isEqualTo: email.value)
+        .where('uid', isEqualTo: _auth.currentUser!.uid)
         .get()
-        .then((value) {
+        .then((value) async {
       if (value.size == 0) {
-        db
-            .collection('votemember')
-            .doc(email.value)
-            .set({'email': email.value});
+        final bool? result = await Get.to(const CreateAccount());
+
+        if (result!) {
+          Get.back();
+        } else {
+          googleSignOut();
+        }
       }
     });
+  }
+
+  void googleSignOut() async {
+    await _auth.signOut();
+    await GoogleSignIn().signOut();
+    bt.value = '구글 로그인';
   }
 }

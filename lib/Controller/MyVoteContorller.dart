@@ -21,7 +21,7 @@ class MyVoteController extends GetxController {
 
     await db
         .collection('votemember')
-        .doc(_auth.currentUser!.email)
+        .doc(_auth.currentUser!.uid)
         .get()
         .then((value)
     {

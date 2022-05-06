@@ -39,7 +39,9 @@ class BoardController extends GetxController {
   Future<void> getAuth() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     if (_auth.currentUser != null){
-      final bool refreshPage = await Get.to(const boardAdd(),arguments: null);
+      final bool refreshPage = await Get.to(const boardAdd(),arguments: {
+        'docId' : null,
+        'cateId' : cateId});
       print(refreshPage);
       if(refreshPage) {
         list.clear();

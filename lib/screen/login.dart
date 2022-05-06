@@ -7,7 +7,6 @@ import '../Controller/gSigninController.dart';
 
 class Login extends StatelessWidget {
   Login({Key? key}) : super(key: key);
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final gSigninController c = Get.put(gSigninController());
 
   Future<UserCredential> signInWithGoogle() async {
@@ -27,22 +26,15 @@ class Login extends StatelessWidget {
     c.name.value = googleUser!.displayName!;
     c.email.value = googleUser.email;
     c.bt.value = '로그아웃';
-    c.adduser();
+
 
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  void googleSignOut() async {
-    await _auth.signOut();
-    await GoogleSignIn().signOut();
-    c.bt.value = '구글 로그인';
-
-  }
 
   @override
   Widget build(BuildContext context) {
-    final gSigninController c = Get.find();
     return Scaffold(
       appBar: AppBar(
         title: Text('로그인'),
@@ -62,31 +54,17 @@ class Login extends StatelessWidget {
 
   Widget sign() {
       return TextButton(
-          onPressed: () {
+          onPressed: () async {
             if (c.bt.value == '구글 로그인') {
-              signInWithGoogle();
+              await signInWithGoogle();
+              c.adduser();
             } else {
               c.name.value = '정보없음';
               c.email.value = '';
-              googleSignOut();
+              c.googleSignOut();
             }
           },
           child: Obx(() => Text(c.bt.value)),
       );
-
-    //   return TextButton(
-    //       onPressed: () {
-    //         signInWithGoogle();
-    //       },
-    //       child: Text('구글 로그인'));
-    // } else {
-    //   return TextButton(
-    //       onPressed: () {
-    //         c.name.value = '정보없음';
-    //         c.email.value = '';
-    //         googleSignOut();
-    //       },
-    //       child: Text('로그아웃'));
-    // }
   }
 }

@@ -65,15 +65,15 @@ class VoteController extends GetxController {
         .doc(uid.value)
         .collection(uid.value)
         .doc(votelist[index].id);
-    final votemember = db.collection('votemember').doc(_auth.currentUser!.email);
+    final votemember = db.collection('votemember').doc(_auth.currentUser!.uid);
 
     //투표버튼 클릭
     votemember.get().then((value) {
       mylist = value.data()!['voteList'];
       int i = 0;
       var dist = false;
-      while (i < mylist.length){
-        if(mylist[i] == uid.value){
+      while (i < mylist.length) {
+        if (mylist[i] == uid.value) {
           dist = true;
           break;
         }
@@ -114,7 +114,7 @@ class VoteController extends GetxController {
                   //투표 어디햇는지 저장
                   votedb
                       .collection(votelist[index].id)
-                      .doc(_auth.currentUser!.email)
+                      .doc(_auth.currentUser!.uid)
                       .set({
                     'vote': _auth.currentUser!.email,
                     'name': _auth.currentUser!.displayName,

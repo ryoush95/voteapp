@@ -10,6 +10,7 @@ class BoardAddController extends GetxController {
   TextEditingController title = TextEditingController();
   TextEditingController content = TextEditingController();
   RxString name = ''.obs;
+  String? cateId;
   String? docId;
 
   @override
@@ -18,12 +19,14 @@ class BoardAddController extends GetxController {
     super.onInit();
     db
         .collection('votemember')
-        .doc(_auth.currentUser!.email)
+        .doc(_auth.currentUser!.uid)
         .get()
         .then((value) => name.value = value['name']
     );
 
-    docId = Get.arguments;
+    print(cateId);
+    cateId = Get.arguments['cateId'];
+    docId = Get.arguments['docId'];
     print(docId);
     if (docId != null){
       db.collection('board').doc(docId).get().then((value){
@@ -56,13 +59,13 @@ class BoardAddController extends GetxController {
       }else {
         //새 글
         db.collection('board').add({
-          'writer': _auth.currentUser!.email,
+          'writer': _auth.currentUser!.uid,
           'name': name.value,
           'timestamp': Timestamp.now(),
           'title': title.text,
           'content': content.text,
           'replycount': 0,
-          'category': 'a',
+          'category': cateId,
         }).then((value) {
           Get.back(result: true);
           Fluttertoast.showToast(msg: '게시물 등록');

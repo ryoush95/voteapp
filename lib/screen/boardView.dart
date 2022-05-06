@@ -21,8 +21,8 @@ class Boardview extends StatelessWidget {
           Obx(() => c.idCheck.value
               ? ElevatedButton(
                   onPressed: () async {
-                    final bool refresh =
-                        await Get.to(const boardAdd(), arguments: c.docId);
+                    final bool refresh = await Get.to(const boardAdd(),
+                        arguments: {'docId': c.docId, 'cateId': null});
 
                     if (refresh) {
                       c.init();
@@ -112,7 +112,7 @@ class Boardview extends StatelessWidget {
                       const Text('댓글'),
                       IconButton(
                         onPressed: () {
-                          c.replyrefresh();
+                          c.replyRefresh();
                         },
                         icon: const Icon(Icons.refresh_rounded),
                       ),
@@ -153,7 +153,7 @@ class Boardview extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        c.replyadd(c.txc.text);
+                        c.replyAdd(c.txc.text);
                         c.txc.text = '';
                       },
                       child: const Text('등록'),
@@ -187,7 +187,7 @@ class Boardview extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () {
-                    c.replydelete(c.replylist[index].id);
+                    c.replyDelete(c.replylist[index].id);
                   },
                   icon: const Icon(
                     Icons.delete,

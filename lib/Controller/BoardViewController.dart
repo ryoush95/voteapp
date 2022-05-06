@@ -48,21 +48,11 @@ class BoardViewController extends GetxController {
         time.value = datetime(data['timestamp']);
         replycount.value = data['replycount'];
         writer = data['writer'];
-        writer == _auth.currentUser!.email ? idCheck.value = true : idCheck.value = false;
+        writer == _auth.currentUser!.uid ? idCheck.value = true : idCheck.value = false;
       }
     });
 
-    await db
-        .collection('board')
-        .doc(room)
-        .collection('reply')
-        .orderBy('timestamp', descending: true)
-        .get()
-        .then(
-          (value) => value.docs.forEach((e) {
-            replylist.add(e);
-          }),
-        );
+    await replyRefresh();
   }
 
   void boardDelete() {
@@ -85,25 +75,25 @@ class BoardViewController extends GetxController {
     ));
   }
 
-  void replyadd(String content) async {
+  void replyAdd(String content) async {
     String name = '';
     await db
         .collection('votemember')
-        .doc(_auth.currentUser!.email)
+        .doc(_auth.currentUser!.uid)
         .get()
         .then((value) => name = value.data()!['name']);
     await db.collection('board').doc(room).collection('reply').doc().set({
-      'writer': _auth.currentUser!.email,
+      'writer': _auth.currentUser!.uid,
       'content': content,
       'timestamp': Timestamp.now(),
       'name': name,
     });
     replycount.value += 1;
     replyCountUpdate();
-    replyrefresh();
+    replyRefresh();
   }
 
-  void replyrefresh() async {
+  Future<void> replyRefresh() async {
     replylist.clear();
     await db
         .collection('board')
@@ -117,7 +107,7 @@ class BoardViewController extends GetxController {
     update();
   }
 
-  void replydelete(String id) {
+  void replyDelete(String id) {
     Get.dialog(AlertDialog(
       content: const Text('댓글을 삭제하시겠습니까?'),
       actions: [
@@ -136,7 +126,7 @@ class BoardViewController extends GetxController {
                   .delete();
               replycount.value -= 1;
               replyCountUpdate();
-              replyrefresh();
+              replyRefresh();
               Get.back();
             },
             child: const Text('네')),

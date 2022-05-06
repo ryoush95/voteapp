@@ -7,14 +7,14 @@ class MyInfoController extends GetxController{
   final _auth = FirebaseAuth.instance;
   final db = FirebaseFirestore.instance;
   final nameTxc = TextEditingController();
-  String email = '';
+  String uid = '';
 
 
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    email = _auth.currentUser!.email!;
+    uid = _auth.currentUser!.uid;
     init();
   }
 
@@ -26,13 +26,13 @@ class MyInfoController extends GetxController{
   }
 
   void init() async {
-    await db.collection('votemember').doc(email).get().then((value){
+    await db.collection('votemember').doc(uid).get().then((value){
       nameTxc.text = value.data()!['name'];
     });
   }
 
   void infoSave(){
-    db.collection('votemember').doc(email).update({
+    db.collection('votemember').doc(uid).update({
       'name' : nameTxc.text,
     }).then((value) =>
         Get.back()
