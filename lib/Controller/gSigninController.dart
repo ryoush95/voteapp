@@ -36,10 +36,11 @@ class gSigninController extends GetxController {
       if (value.size == 0) {
         final bool? result = await Get.to(const CreateAccount());
 
-        if (result!) {
+        if (result == true) {
           Get.back();
         } else {
           googleSignOut();
+          Get.back();
         }
       }
     });

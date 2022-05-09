@@ -8,6 +8,7 @@ class MyInfoController extends GetxController{
   final db = FirebaseFirestore.instance;
   final nameTxc = TextEditingController();
   String uid = '';
+  String email = '';
 
 
   @override
@@ -15,6 +16,7 @@ class MyInfoController extends GetxController{
     // TODO: implement onInit
     super.onInit();
     uid = _auth.currentUser!.uid;
+    email = _auth.currentUser!.email!;
     init();
   }
 

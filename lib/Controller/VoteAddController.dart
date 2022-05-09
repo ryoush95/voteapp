@@ -40,7 +40,8 @@ class VoteAddController extends GetxController {
         'title': title,
         'memo': memo,
         'category': category.value,
-      });
+      }).then((value) => Get.back());
+      Fluttertoast.showToast(msg: '투표함이 등록되었습니다', gravity: ToastGravity.BOTTOM);
     } else {
       Fluttertoast.showToast(
         msg: '빈칸을 확인해주세요',

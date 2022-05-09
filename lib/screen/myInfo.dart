@@ -20,7 +20,7 @@ class MyInfo extends StatelessWidget {
             TextField(
               readOnly: true,
               decoration: InputDecoration(
-                hintText: c.uid,
+                hintText: c.email,
                 border: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 ),
