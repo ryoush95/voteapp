@@ -1,14 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class BoardViewController extends GetxController {
   FirebaseFirestore db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  quill.QuillController qc = quill.QuillController.basic();
   String room = Get.arguments;
   final txc = TextEditingController();
   RxString title = ''.obs;
@@ -23,10 +26,10 @@ class BoardViewController extends GetxController {
   RxBool idCheck =false.obs;
 
   @override
-  void onInit() {
+  void onInit() async{
     // TODO: implement onInit
     super.onInit();
-    init();
+    await init();
   }
 
   @override
@@ -37,7 +40,7 @@ class BoardViewController extends GetxController {
     BoardViewController().dispose();
   }
 
-  void init() async {
+  Future<void> init() async {
     await db.collection('board').doc(room).get().then((value) {
       docId = value.id;
       if (value.exists) {
@@ -51,6 +54,12 @@ class BoardViewController extends GetxController {
         writer == _auth.currentUser!.uid ? idCheck.value = true : idCheck.value = false;
       }
     });
+
+    var json = jsonDecode(content.value);
+
+    qc = quill.QuillController(document: quill.Document.fromJson(json),
+        selection: const TextSelection.collapsed(offset: 0));
+    print(qc.document.toDelta());
 
     await replyRefresh();
   }

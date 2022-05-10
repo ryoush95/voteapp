@@ -1,14 +1,18 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 
 class BoardAddController extends GetxController {
   FirebaseFirestore db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController title = TextEditingController();
   TextEditingController content = TextEditingController();
+  QuillController qc = QuillController.basic();
   RxString name = ''.obs;
   String? cateId;
   String? docId;
@@ -32,8 +36,12 @@ class BoardAddController extends GetxController {
       db.collection('board').doc(docId).get().then((value){
         title.text = value['title'];
         content.text = value['content'];
+
       });
     }
+    var json = jsonDecode(content.text);
+    qc = QuillController(document: Document.fromJson(json),
+        selection: TextSelection.collapsed(offset: 0));
   }
 
   @override
@@ -46,13 +54,14 @@ class BoardAddController extends GetxController {
   }
 
   void boardadd() {
+    var data = jsonEncode(qc.document.toDelta().toJson());
     //no blank
-    if (title.text.isNotEmpty && content.text.isNotEmpty) {
+    if (title.text.isNotEmpty ) {
       //수정
       if(docId != null){
        db.collection('board').doc(docId).update({
          'title': title.text,
-         'content' : content.text,
+         'content' : data,
        }).then((value) {
          Get.back(result: true);
        });
@@ -63,7 +72,7 @@ class BoardAddController extends GetxController {
           'name': name.value,
           'timestamp': Timestamp.now(),
           'title': title.text,
-          'content': content.text,
+          'content': data,
           'replycount': 0,
           'category': cateId,
         }).then((value) {

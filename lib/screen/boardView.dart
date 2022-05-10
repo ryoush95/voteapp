@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:get/get.dart';
 
 import '../Controller/BoardViewController.dart';
 import 'boardAdd.dart';
 
-class Boardview extends StatelessWidget {
+class Boardview extends StatefulWidget {
   const Boardview({Key? key}) : super(key: key);
 
+  @override
+  State<Boardview> createState() => _BoardviewState();
+}
+
+class _BoardviewState extends State<Boardview> {
   @override
   Widget build(BuildContext context) {
     final BoardViewController c = Get.put(BoardViewController());
@@ -85,14 +91,17 @@ class Boardview extends StatelessWidget {
                   thickness: 2,
                   height: 40,
                 ),
-                Obx(
-                  () => Text(
-                    c.content.value,
-                    style: (const TextStyle(
-                      fontSize: 18.0,
-                    )),
-                  ),
-                ),
+                // Obx(
+                //   () => Text(
+                //     c.content.value,
+                //     style: (const TextStyle(
+                //       fontSize: 18.0,
+                //     )),
+                //   ),
+                // ),
+                GetBuilder<BoardViewController>(builder: (_){
+                  return quill.QuillEditor.basic(controller: c.qc, readOnly: true,);
+                }),
                 const SizedBox(
                   height: 80,
                 ),
