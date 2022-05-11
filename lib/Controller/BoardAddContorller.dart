@@ -11,37 +11,42 @@ class BoardAddController extends GetxController {
   FirebaseFirestore db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController title = TextEditingController();
-  TextEditingController content = TextEditingController();
+  // TextEditingController content = TextEditingController();
   QuillController qc = QuillController.basic();
   RxString name = ''.obs;
+  RxString content = ''.obs;
   String? cateId;
   String? docId;
 
   @override
-  void onInit() {
+  void onInit() async {
     // TODO: implement onInit
     super.onInit();
-    db
+    await init();
+
+  }
+
+  Future<void> init() async {
+    await db
         .collection('votemember')
         .doc(_auth.currentUser!.uid)
         .get()
         .then((value) => name.value = value['name']
     );
 
-    print(cateId);
     cateId = Get.arguments['cateId'];
     docId = Get.arguments['docId'];
-    print(docId);
     if (docId != null){
-      db.collection('board').doc(docId).get().then((value){
-        title.text = value['title'];
-        content.text = value['content'];
-
+      await db.collection('board').doc(docId).get().then((value){
+        title.text = value.data()!['title'];
+        content.value = value.data()!['content'];
       });
+      var json = jsonDecode(content.value);
+      qc = QuillController(document: Document.fromJson(json),
+          selection: const TextSelection.collapsed(offset: 0));
+      print(qc.document.toDelta());
     }
-    var json = jsonDecode(content.text);
-    qc = QuillController(document: Document.fromJson(json),
-        selection: TextSelection.collapsed(offset: 0));
+    update();
   }
 
   @override
@@ -49,7 +54,7 @@ class BoardAddController extends GetxController {
     // TODO: implement dispose
     super.dispose();
     title.dispose();
-    content.dispose();
+    // content.dispose();
     Get.delete<BoardAddController>();
   }
 

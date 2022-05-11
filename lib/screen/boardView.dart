@@ -5,14 +5,8 @@ import 'package:get/get.dart';
 import '../Controller/BoardViewController.dart';
 import 'boardAdd.dart';
 
-class Boardview extends StatefulWidget {
+class Boardview extends StatelessWidget {
   const Boardview({Key? key}) : super(key: key);
-
-  @override
-  State<Boardview> createState() => _BoardviewState();
-}
-
-class _BoardviewState extends State<Boardview> {
   @override
   Widget build(BuildContext context) {
     final BoardViewController c = Get.put(BoardViewController());
