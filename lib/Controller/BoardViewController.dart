@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -86,6 +87,10 @@ class BoardViewController extends GetxController {
 
   void replyAdd(String content) async {
     String name = '';
+    if(content.isEmpty){
+      Fluttertoast.showToast(msg: '댓글을 써주세요');
+      return;
+    }
     await db
         .collection('votemember')
         .doc(_auth.currentUser!.uid)

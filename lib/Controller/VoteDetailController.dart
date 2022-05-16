@@ -27,7 +27,7 @@ class VoteDetailController extends GetxController {
     });
   }
 
-  ImageProvider circle() {
+  ImageProvider imgBox() {
     if (image == '') {
       return const AssetImage('images/noimg.jpg');
     } else {

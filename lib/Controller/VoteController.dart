@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:voteapp/screen/addCandidate.dart';
 
 import '../model.dart';
 
 class VoteController extends GetxController {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final _auth = FirebaseAuth.instance;
   RxList<dynamic> votelist = <dynamic>[].obs;
   RxInt num = 0.obs;
   RxString uid = ''.obs;
@@ -15,19 +16,13 @@ class VoteController extends GetxController {
   List mylist = [];
 
   @override
-  void onReady() {
-    // TODO: implement onInit
-    super.onReady();
+  void onInit() {
+    super.onInit();
     voterank();
   }
 
-  // @override
-  // void onClose() {
-  //   // TODO: implement onInit
-  //   super.onClose();
-  //   print('close');
-  // }
 
+  //투표 리스트
   Future voterank() async {
     String img;
     await db
@@ -51,6 +46,7 @@ class VoteController extends GetxController {
     );
   }
 
+  // 이미지 바인딩
   ImageProvider? circle(int index) {
     if (votelist[index].img == '') {
       return const AssetImage('images/noimg.jpg');
@@ -60,6 +56,10 @@ class VoteController extends GetxController {
   }
 
   void voting(int index) {
+    if (_auth.currentUser == null) {
+      print('no auth');
+      return;
+    }
     var votedb = db
         .collection('vote')
         .doc(uid.value)
@@ -145,5 +145,22 @@ class VoteController extends GetxController {
       'votecount': 0,
       'timestamp': Timestamp.now(),
     });
+  }
+
+  //후보 추가로 이동
+  void candidate() async{
+    if (_auth.currentUser == null) {
+      print('no auth');
+      return;
+    }
+    bool result = await Get.to(const AddCandidate(),
+        arguments: uid.value);
+
+    if (result) {
+      votelist.clear();
+      voterank();
+    } else {
+      return;
+    }
   }
 }

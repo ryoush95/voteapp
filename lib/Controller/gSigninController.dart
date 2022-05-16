@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:voteapp/screen/CreateAccount.dart';
+import 'package:voteapp/screen/bottomNavigation.dart';
 
 class gSigninController extends GetxController {
   final _auth = FirebaseAuth.instance;
@@ -50,5 +51,6 @@ class gSigninController extends GetxController {
     await _auth.signOut();
     await GoogleSignIn().signOut();
     bt.value = '구글 로그인';
+    Get.offAll(BottomNavigation());
   }
 }

@@ -11,10 +11,8 @@ class BoardAddController extends GetxController {
   FirebaseFirestore db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController title = TextEditingController();
-  // TextEditingController content = TextEditingController();
   QuillController qc = QuillController.basic();
   RxString name = ''.obs;
-  RxString content = ''.obs;
   String? cateId;
   String? docId;
 
@@ -37,11 +35,12 @@ class BoardAddController extends GetxController {
     cateId = Get.arguments['cateId'];
     docId = Get.arguments['docId'];
     if (docId != null){
+      String content = '';
       await db.collection('board').doc(docId).get().then((value){
         title.text = value.data()!['title'];
-        content.value = value.data()!['content'];
+        content = value.data()!['content'];
       });
-      var json = jsonDecode(content.value);
+      var json = jsonDecode(content);
       qc = QuillController(document: Document.fromJson(json),
           selection: const TextSelection.collapsed(offset: 0));
       print(qc.document.toDelta());
@@ -54,14 +53,13 @@ class BoardAddController extends GetxController {
     // TODO: implement dispose
     super.dispose();
     title.dispose();
-    // content.dispose();
     Get.delete<BoardAddController>();
   }
 
   void boardadd() {
     var data = jsonEncode(qc.document.toDelta().toJson());
     //no blank
-    if (title.text.isNotEmpty ) {
+    if (title.text.isNotEmpty && !qc.document.isEmpty() ) {
       //수정
       if(docId != null){
        db.collection('board').doc(docId).update({
@@ -81,7 +79,7 @@ class BoardAddController extends GetxController {
           'replycount': 0,
           'category': cateId,
         }).then((value) {
-          Get.back(result: true);
+          // Get.back(result: true);
           Fluttertoast.showToast(msg: '게시물 등록');
         });
       }

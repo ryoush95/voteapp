@@ -55,14 +55,8 @@ class Vote extends StatelessWidget {
                       style: const TextStyle(fontSize: 20.0),
                     ),
                     TextButton(
-                        onPressed: () async {
-                          bool result = await Get.to(const AddCandidate(),
-                              arguments: c.uid.value);
-
-                          if (result) {
-                            c.votelist.clear();
-                            c.voterank();
-                          }
+                        onPressed: () {
+                          c.candidate();
                         },
                         child: const Text('후보 추가'))
                   ]),
@@ -82,7 +76,7 @@ class Vote extends StatelessWidget {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
-                        onTap: () => Get.to(VoteDetail(),
+                        onTap: () => Get.to(const VoteDetail(),
                             arguments: {
                           'uid' : Get.arguments['uid'],
                           'doc' : c.votelist[index].id}),

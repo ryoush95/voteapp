@@ -85,14 +85,6 @@ class Boardview extends StatelessWidget {
                   thickness: 2,
                   height: 40,
                 ),
-                // Obx(
-                //   () => Text(
-                //     c.content.value,
-                //     style: (const TextStyle(
-                //       fontSize: 18.0,
-                //     )),
-                //   ),
-                // ),
                 GetBuilder<BoardViewController>(builder: (_){
                   return quill.QuillEditor.basic(controller: c.qc, readOnly: true,);
                 }),
