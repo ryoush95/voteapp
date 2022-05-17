@@ -18,6 +18,7 @@ class Board extends StatefulWidget {
 class _BoardState extends ResumableState<Board> {
   BoardController c = Get.put(BoardController());
   FirebaseFirestore db = FirebaseFirestore.instance;
+  int limit = 20;
 
   @override
   void initState() {
@@ -25,13 +26,12 @@ class _BoardState extends ResumableState<Board> {
     super.initState();
     c.cateId = widget.arguments;
     c.init();
-    // c.txc.addListener(() {});
+
   }
 
   @override
   void dispose() {
     // 텍스트에디팅컨트롤러를 제거하고, 등록된 리스너도 제거된다.
-    // c.txc.dispose();
     Get.delete<BoardController>();
     super.dispose();
   }
@@ -49,13 +49,22 @@ class _BoardState extends ResumableState<Board> {
     RefreshController refreshController =
         RefreshController(initialRefresh: false);
 
+
     Future onRefresh() async {
       // monitor network fetch
       await Future.delayed(const Duration(milliseconds: 1000));
       // if failed,use refreshFailed()
       c.list.clear();
       c.init();
+      limit = 20;
       refreshController.refreshCompleted();
+    }
+
+    Future onLoadMore() async {
+      await Future.delayed(Duration(milliseconds: 1000));
+
+      c.loadMore();
+      refreshController.loadComplete();
     }
 
     Widget listText(String text){
@@ -87,10 +96,33 @@ class _BoardState extends ResumableState<Board> {
             child: GetBuilder<BoardController>(
               builder: (_) => SmartRefresher(
                 enablePullDown: true,
-                enablePullUp: false,
+                enablePullUp: true,
                 header: const ClassicHeader(),
+                footer: CustomFooter(builder: (context, LoadStatus? mode){
+                  Widget body ;
+                  if(mode==LoadStatus.idle){
+                    body =  Text("마지막 글입니다");
+                  }
+                  else if(mode==LoadStatus.loading){
+                    body =  CircularProgressIndicator();
+                  }
+                  else if(mode == LoadStatus.failed){
+                    body = Text("다시 시도해주세요");
+                  }
+                  else if(mode == LoadStatus.canLoading){
+                    body = Text("release to load more");
+                  }
+                  else{
+                    body = Text("마지막 글입니다");
+                  }
+                  return Container(
+                    height: 55.0,
+                    child: Center(child:body),
+                  );
+                }),
                 controller: refreshController,
                 onRefresh: onRefresh,
+                onLoading: onLoadMore,
                 child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
                   itemCount: c.list.length,

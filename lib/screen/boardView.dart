@@ -13,7 +13,7 @@ class Boardview extends StatelessWidget {
 
     return WillPopScope(
       onWillPop: () async {
-        Get.back(result: true);
+        Get.back(result: false);
         return false;
       },
       child: Scaffold(
@@ -95,7 +95,7 @@ class Boardview extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                       onPressed: () {
-                        Get.back(result: true);
+                        Get.back(result: false);
                       },
                       child: const Text('목록으로')),
                 ),

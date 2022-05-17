@@ -13,15 +13,18 @@ class BoardController extends GetxController {
 
   List list = [];
   String cateId = '';
+  late Timestamp afterId;
 
   void init() async {
+
     await db
         .collection('board')
         .where('category', isEqualTo: cateId)
         .orderBy('timestamp', descending: true)
-        .get()
+        .limit(30).get()
         .then(
           (value) => value.docs.forEach((element) {
+            afterId = element.data()['timestamp'];
             list.add(
               BoardModel(
                   id: element.id,
@@ -33,6 +36,31 @@ class BoardController extends GetxController {
             );
           }),
         );
+    update();
+  }
+
+  void loadMore() async {
+    await db
+        .collection('board')
+        .where('category', isEqualTo: cateId)
+        .orderBy('timestamp', descending: true)
+        .startAfter([afterId])
+        .limit(30)
+        .get()
+        .then(
+          (value) => value.docs.forEach((element) {
+            afterId = element.data()['timestamp'];
+        list.add(
+          BoardModel(
+              id: element.id,
+              title: element.data()['title'],
+              writer: element.data()['writer'],
+              replycount: element.data()['replycount'],
+              ts: datetime(element.data()['timestamp']),
+              name: element.data()['name']),
+        );
+      }),
+    );
     update();
   }
 
