@@ -18,6 +18,7 @@ class VoteController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    uid.value = Get.arguments['uid'];
     voterank();
   }
 

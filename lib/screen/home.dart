@@ -31,7 +31,15 @@ class Home extends StatelessWidget {
                   },
                   icon: const Icon(Icons.refresh))
             ]),
-            const Text(''),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Obx(
+                () => Text(
+                  c.hotname.value,
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ),
+            ),
             SizedBox(
               height: 350,
               child: Obx(
@@ -93,7 +101,15 @@ class Home extends StatelessWidget {
                 fontSize: 18,
               ),
             ),
-            const Text(''),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Obx(
+                () => Text(
+                  c.newname.value,
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ),
+            ),
             SizedBox(
               height: 350,
               child: Obx(

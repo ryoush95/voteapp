@@ -12,9 +12,9 @@ class HomeController extends GetxController {
   RxList hotlist = [].obs;
   RxList newlist = [].obs;
   String hotuid = '';
-  String hotname = '';
+  RxString hotname = ''.obs;
   String newuid = '';
-  String newname = '';
+  RxString newname = ''.obs;
 
   @override
   void onReady() {
@@ -36,9 +36,10 @@ class HomeController extends GetxController {
     var random = Random().nextInt(2);
     String img;
 
-    await db.orderBy('allcount', descending: true).limit(2).get().then((value) {
+    await db.orderBy('allcount', descending: true)
+        .limit(2).get().then((value) {
       hotuid = value.docs[random].id;
-      hotname = value.docs[random]['title'];
+      hotname.value = value.docs[random]['title'];
       db
           .doc(hotuid)
           .collection(value.docs[random].id)
@@ -64,9 +65,12 @@ class HomeController extends GetxController {
     var random = Random().nextInt(3);
     String img;
 
-    db.orderBy('timestamp', descending: true).limit(3).get().then((value) {
+    db.where('allcount', isGreaterThan: 0)
+        .orderBy('allcount', descending: false)
+        .orderBy('timestamp', descending: true)
+        .limit(3).get().then((value) {
       newuid = value.docs[random].id;
-      newname = value.docs[random]['title'];
+      newname.value = value.docs[random]['title'];
       db
           .doc(newuid)
           .collection(newuid)
@@ -100,10 +104,10 @@ class HomeController extends GetxController {
     if (v == 1) {
       Get.to(
         const Vote(),
-        arguments: {'uid': hotuid, 'name': hotname},
+        arguments: {'uid': hotuid, 'name': hotname.value},
       );
     } else {
-      Get.to(const Vote(), arguments: {'uid': newuid, 'name': newname});
+      Get.to(const Vote(), arguments: {'uid': newuid, 'name': newname.value});
     }
   }
 }

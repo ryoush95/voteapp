@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:voteapp/screen/addCandidate.dart';
 import 'package:voteapp/screen/voteDetail.dart';
 
 import '../Controller/VoteController.dart';
@@ -13,7 +12,6 @@ class Vote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final VoteController c = Get.put(VoteController());
-    c.uid.value = Get.arguments['uid'];
     RefreshController refreshController =
         RefreshController(initialRefresh: false);
 
