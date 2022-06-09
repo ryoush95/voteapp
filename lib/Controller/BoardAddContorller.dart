@@ -79,7 +79,7 @@ class BoardAddController extends GetxController {
           'replycount': 0,
           'category': cateId,
         }).then((value) {
-          // Get.back(result: true);
+          Get.back(result: true);
           Fluttertoast.showToast(msg: '게시물 등록');
         });
       }

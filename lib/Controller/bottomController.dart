@@ -12,7 +12,7 @@ class BottomNaviController extends GetxController {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   GlobalKey<NavigatorState> navigatorKey2 = GlobalKey<NavigatorState>();
   RxBool isCategoryPageOpen = false.obs;
-  RxString titletext = 'app titleee'.obs;
+  RxString titletext = 'Rank5'.obs;
 
   void onItemTapped(int index) {
     selectIndex.value = index;

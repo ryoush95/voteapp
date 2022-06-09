@@ -29,18 +29,30 @@ class MyInfo extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            TextField(
-              controller: c.nameTxc,
-              decoration: const InputDecoration(
-                hintText: '닉네임',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: c.nameTxc,
+                    decoration: const InputDecoration(
+                      hintText: '닉네임',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(
+                  width: 10,
+                ),
+                ElevatedButton(onPressed: () {
+                  c.infoSave();
+                }, child: const Text('중복검사')),
+              ],
             ),
             ElevatedButton(onPressed: () {
-              c.infoSave();
-            }, child: const Text('save'))
+              c.revoke();
+            }, child: const Text('회원탈퇴')),
           ],
         ),
       ),

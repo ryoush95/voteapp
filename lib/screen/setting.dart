@@ -15,28 +15,37 @@ class Setting extends StatefulWidget {
 }
 
 class _SettingState extends State<Setting> {
+  final auth = FirebaseAuth.instance;
+  var user;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    user = auth.currentUser;
+  }
+
   @override
   Widget build(BuildContext context) {
     // final c = Get.put(SettingController());
-    final auth = FirebaseAuth.instance;
-
-    void goMyinfo(get) {
-      if(auth.currentUser != null) {
-        get;
-      } else {
-        Get.to(Login());
-      }
-    }
 
     return Scaffold(
       body: Center(
         child: Column(
           children: [
             ElevatedButton(onPressed: (){
-              goMyinfo(Get.to(const MyInfo()));
+              if (user != null) {
+                Get.to(const MyInfo());
+              } else {
+                Get.to(Login());
+              }
             }, child: Text('내정보')),
             ElevatedButton(onPressed: (){
-              goMyinfo(Get.to(const MyVote()));
+              if (user != null) {
+                Get.to(const MyVote());
+              } else {
+                Get.to(Login());
+              }
             }, child: Text('내가 간 투표함')),
           ],
         ),

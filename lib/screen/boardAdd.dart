@@ -16,7 +16,6 @@ class boardAdd extends StatelessWidget {
           MaterialButton(
               onPressed: () {
                 c.boardadd();
-                print(c.qc.document.toPlainText());
               },
               child: const Text(
                 '등록',
