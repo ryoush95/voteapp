@@ -24,32 +24,65 @@ class voteAdd extends StatelessWidget {
             () => Column(
               children: [
                 DropdownButton<String>(
-                    value: c.category.value,
-                    isExpanded: true,
-                    underline: Container(
-                      height: 2,
-                      color: Colors.blueGrey,
-                    ),
-                    onChanged: (String? data) {
-                      c.cate(data!);
-                    },
-                    items: c.cateitem(),
+                  value: c.category.value,
+                  isExpanded: true,
+                  underline: Container(
+                    height: 2,
+                    color: Colors.blueGrey,
                   ),
+                  onChanged: (String? data) {
+                    c.cate(data!);
+                  },
+                  items: c.cateitem(),
+                ),
                 TextField(
-                  decoration: const InputDecoration(
-                    hintText: "투표함 이름"
-                  ),
+                  decoration: const InputDecoration(hintText: "투표함 이름"),
                   controller: c.titletxc,
                 ),
                 TextField(
-                  decoration: const InputDecoration(
-                      hintText: "추가 정보"
-                  ),
+                  decoration: const InputDecoration(hintText: "추가 정보"),
                   controller: c.memotxc,
                 ),
-                ElevatedButton(onPressed: (){
-                  c.add(c.titletxc.text, c.memotxc.text);
-                }, child: const Text('go'),
+                Obx(
+                  () => RadioListTile(
+                    value: false,
+                    groupValue: c.period.value,
+                    onChanged: (bool? value) {
+                      c.period.value = value!;
+                    },
+                    title: Text("no date"),
+                  ),
+                ),
+                Obx(
+                  () => RadioListTile(
+                    value: true,
+                    groupValue: c.period.value,
+                    onChanged: (bool? value) {
+                      c.period.value = value!;
+                    },
+                    title: Text("date"),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                      visible: c.period.value,
+                      child: Column(
+                        children: [
+                          DropdownButton<String>(
+                              value: c.data.value,
+                              items: c.dateItem(),
+                              onChanged: (String? data) {
+                                c.data.value = data!;
+                              }),
+                          Text('end ${c.dateAfter()}')
+                        ],
+                      )),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    c.add(c.titletxc.text, c.memotxc.text);
+                  },
+                  child: const Text('go'),
                 ),
               ],
             ),

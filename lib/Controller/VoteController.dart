@@ -58,7 +58,17 @@ class VoteController extends GetxController {
 
   void voting(int index) {
     if (_auth.currentUser == null) {
-      print('no auth');
+      Get.dialog(
+        AlertDialog(
+          title: Text('로그인을 해주세요'),
+          actions: [
+            TextButton(onPressed: (){
+              Get.back();
+            }, child: Text('확인')),
+
+          ],
+        )
+      );
       return;
     }
     var votedb = db

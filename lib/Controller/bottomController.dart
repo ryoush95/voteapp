@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-FirebaseFirestore db = FirebaseFirestore.instance;
 
 class BottomNaviController extends GetxController {
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  FirebaseAuth auth = FirebaseAuth.instance;
   static BottomNaviController get to => Get.find();
   RxInt selectIndex = 0.obs;
   DateTime backpress = DateTime.now();

@@ -22,7 +22,11 @@ class BottomNavigation extends StatelessWidget {
           title: Obx(()=> Text(c.titletext.value)),
           actions: [
             IconButton(onPressed: (){
-              Get.to(const voteAdd());
+              if(c.auth.currentUser != null) {
+                Get.to(const voteAdd());
+              } else {
+                Get.to(Login());
+              }
             },
                 icon: const Icon(Icons.add),
             ),
